@@ -11,8 +11,7 @@ export default function FileUpload({ onUpload }) {
 
   return (
     <div className="flex flex-col items-center justify-center w-full max-w-2xl mx-auto">
-     
-      <div className="w-full bg-gray-500 rounded-3xl shadow-2xl border border-gray-100">
+      <div className="w-full bg-white rounded-3xl shadow-2xl border border-gray-100 overflow-hidden">
         <div
           onDragOver={e => {
             e.preventDefault();
@@ -26,10 +25,10 @@ export default function FileUpload({ onUpload }) {
               onUpload(e.dataTransfer.files[0]);
             }
           }}
-          className={`w-full p-16 flex flex-col items-center border-4 transition-all duration-300 ${
+          className={`w-full p-16 flex flex-col items-center border-4 border-dashed transition-all duration-300 ${
             isDragging
-              ? 'border-blue-400 bg-blue-50 scale-[1.02]'
-              : 'border-gray-100 bg-gray-400'
+              ? 'border-blue-400 bg-blue-50 scale-[1.01]'
+              : 'border-gray-200 bg-white'
           }`}
         >
           <div className="w-24 h-24 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center shadow-lg mb-8">
@@ -39,15 +38,17 @@ export default function FileUpload({ onUpload }) {
               fill="none"
               stroke="currentColor"
               strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
             >
-              <path d="M12 5v14m-7-7h14" />
+              <path
+                d="M12 5v14m-7-7h14"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
             </svg>
           </div>
 
-          <h2 className="text-2xl font-bold text-gray-800 mb-2">
-            upload the document here
+          <h2 className="text-2xl font-bold text-gray-800 mb-6">
+            Upload the document here
           </h2>
 
           <input
@@ -60,10 +61,11 @@ export default function FileUpload({ onUpload }) {
 
           <label
             htmlFor="file-upload"
-            className="px-10 py-4 bg-blue-600 text-white text-lg font-bold rounded-full shadow-lg hover:bg-blue-700 hover:shadow-blue-200 transition-all cursor-pointer active:scale-95"
+            className="px-10 py-4 bg-blue-600 text-white text-lg font-bold rounded-full shadow-lg hover:bg-blue-700 transition-all cursor-pointer active:scale-95"
           >
             Select File
           </label>
+          <p className="mt-4 text-sm text-gray-400">Supported: PDF, JPG, PNG</p>
         </div>
       </div>
     </div>

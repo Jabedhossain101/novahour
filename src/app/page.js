@@ -7,10 +7,12 @@ import ResultView from '@/components/ResultView';
 export default function Home() {
   const [step, setStep] = useState(1);
   const [progress, setProgress] = useState(0);
+  const [uploadedFile, setUploadedFile] = useState(null); // ফাইল সেভ করার জন্য
 
   const handleUpload = file => {
+    setUploadedFile(file); // ফাইলটি স্টেটে রাখা হলো
     setStep(2);
-    // Processing Animation
+
     let interval = setInterval(() => {
       setProgress(prev => {
         if (prev >= 100) {
@@ -20,17 +22,16 @@ export default function Home() {
         }
         return prev + 5;
       });
-    }, 150);
+    }, 100);
   };
 
   return (
-    
     <main className="w-full min-h-screen bg-[#F3F7FF] flex items-center justify-center p-4">
-      <div className="w-full max-w-4xl flex justify-center">
+      <div className="w-full max-w-5xl flex justify-center">
         <div className="w-full">
           {step === 1 && <FileUpload onUpload={handleUpload} />}
           {step === 2 && <ProcessingView progress={progress} />}
-          {step === 3 && <ResultView />}
+          {step === 3 && <ResultView file={uploadedFile} />}
         </div>
       </div>
     </main>
