@@ -12,50 +12,41 @@ import FinalReview from '@/components/FinalReview';
 export default function Home() {
   const [step, setStep] = useState(1);
   const [uploadedFile, setUploadedFile] = useState(null);
-  const [parsedData, setParsedData] = useState(null);
 
-  // ১. ফাইল আপলোড হ্যান্ডলার
-  const handleUpload = file => {
-    setUploadedFile(file);
-    setStep(2); // Move to Document Parsing
-  };
-
-  // ২. পরবর্তী ধাপে যাওয়ার ফাংশন
-  const nextStep = () => setStep(prev => prev + 1);
-  const prevStep = () => setStep(prev => prev - 1);
+  const nextStep = () => setStep(s => s + 1);
+  const prevStep = () => setStep(s => s - 1);
 
   return (
-    <main className="w-full min-h-screen bg-[#F3F7FF] p-8">
-      {/* Step Indicator (Optional but helpful) */}
-      <div className="max-w-6xl mx-auto mb-10">
-        <div className="flex justify-between items-center text-xs font-bold text-blue-400 uppercase tracking-widest">
-          <span>Step {step} of 8</span>
-          <span>{uploadedFile?.name || 'No file selected'}</span>
+    <main className="w-full min-h-screen bg-[#F3F7FF] p-6 flex items-center justify-center">
+      <div className="w-full max-w-5xl">
+        {/* Step Indicator */}
+        <div className="mb-8 flex justify-between items-center px-4">
+          <span className="text-sm font-bold text-blue-600">
+            STEP {step} OF 8
+          </span>
+          <div className="flex gap-2">
+            {[...Array(8)].map((_, i) => (
+              <div
+                key={i}
+                className={`h-2 w-8 rounded-full ${step > i ? 'bg-blue-600' : 'bg-gray-200'}`}
+              />
+            ))}
+          </div>
         </div>
-        <div className="w-full bg-gray-200 h-1 mt-2 rounded-full overflow-hidden">
-          <div
-            className="bg-blue-600 h-full transition-all duration-500"
-            style={{ width: `${(step / 8) * 100}%` }}
-          />
-        </div>
-      </div>
 
-      <div className="max-w-6xl mx-auto">
-        {/* ইমেজের ফ্লো অনুযায়ী ৮টি সেকশন */}
-        {step === 1 && <FileUpload onUpload={handleUpload} />}
-
-        {step === 2 && (
-          <DocumentParsing
-            file={uploadedFile}
-            onComplete={data => {
-              setParsedData(data);
+        {/* Dynamic Sections Based on PDF */}
+        {step === 1 && (
+          <FileUpload
+            onUpload={file => {
+              setUploadedFile(file);
               nextStep();
             }}
           />
         )}
-
-        {step === 3 && <ProgressView onComplete={nextStep} />}
-
+        {step === 2 && <DocumentParsing onComplete={nextStep} />}
+        {step === 3 && (
+          <ProgressView onComplete={nextStep} title="Initial Processing" />
+        )}
         {step === 4 && (
           <PreviewPages
             file={uploadedFile}
@@ -63,22 +54,10 @@ export default function Home() {
             onBack={prevStep}
           />
         )}
-
-        {step === 5 && (
-          <ElementSelection
-            data={parsedData}
-            onNext={nextStep}
-            onBack={prevStep}
-          />
-        )}
-
+        {step === 5 && <ElementSelection onNext={nextStep} onBack={prevStep} />}
         {step === 6 && <SchemaDefinition onNext={nextStep} onBack={prevStep} />}
-
         {step === 7 && <ConfidenceReview onNext={nextStep} onBack={prevStep} />}
-
-        {step === 8 && (
-          <FinalReview file={uploadedFile} onRestart={() => setStep(1)} />
-        )}
+        {step === 8 && <FinalReview onRestart={() => setStep(1)} />}
       </div>
     </main>
   );
